@@ -1,8 +1,8 @@
 export const PILLARS = [
   {
-    id: 'onboarding', num: '1', name: 'Onboarding', namePT: 'Integração',
+    id: 'onboarding', num: '1', name: 'Onboarding', namePT: 'Integração', nameES: 'Integración', nameZH: '入職培訓',
     description: 'Everything a new country lead needs to launch a RedotsClub chapter.',
-    descriptionPT: 'Tudo que um novo líder de país precisa para lançar um capítulo RedotsClub.',
+    descriptionPT: 'Tudo que um novo líder de país precisa para lançar um capítulo RedotsClub.', descriptionES: 'Todo lo que un nuevo líder de país necesita para lanzar un capítulo de RedotsClub.', descriptionZH: '新任國家負責人啟動RedotsClub分部所需的一切。',
     articles: [
       {
         id: 'what-is-redotsclub',
@@ -35,9 +35,9 @@ export const PILLARS = [
     ]
   },
   {
-    id: 'comms', num: '2', name: 'Comms', namePT: 'Comunicação',
+    id: 'comms', num: '2', name: 'Comms', namePT: 'Comunicação', nameES: 'Comunicación', nameZH: '溝通',
     description: 'How to communicate as RedotsClub — across Telegram, content, and partnerships.',
-    descriptionPT: 'Como se comunicar como RedotsClub — no Telegram, conteúdo e parcerias.',
+    descriptionPT: 'Como se comunicar como RedotsClub — no Telegram, conteúdo e parcerias.', descriptionES: 'Cómo comunicarse como RedotsClub — en Telegram, contenido y alianzas.', descriptionZH: '如何以RedotsClub身份溝通——Telegram、內容及合作夥伴關係。',
     articles: [
       {
         id: 'how-to-talk',
@@ -70,9 +70,9 @@ export const PILLARS = [
     ]
   },
   {
-    id: 'sourcing-members', num: '3', name: 'Sourcing Members', namePT: 'Captação de Membros',
+    id: 'sourcing-members', num: '3', name: 'Sourcing Members', namePT: 'Captação de Membros', nameES: 'Captación de Miembros', nameZH: '招募會員',
     description: 'How to find, attract, and onboard the right people for your chapter.',
-    descriptionPT: 'Como encontrar, atrair e integrar as pessoas certas para o seu capítulo.',
+    descriptionPT: 'Como encontrar, atrair e integrar as pessoas certas para o seu capítulo.', descriptionES: 'Cómo encontrar, atraer e incorporar a las personas adecuadas para tu capítulo.', descriptionZH: '如何為您的分部找到、吸引並加入合適的人才。',
     articles: [
       {
         id: 'who-to-invite',
@@ -91,9 +91,9 @@ export const PILLARS = [
     ]
   },
   {
-    id: 'events', num: '4', name: 'Events', namePT: 'Eventos',
+    id: 'events', num: '4', name: 'Events', namePT: 'Eventos', nameES: 'Eventos', nameZH: '活動',
     description: 'How to plan, produce, and maximize the impact of RedotsClub events.',
-    descriptionPT: 'Como planejar, produzir e maximizar o impacto dos eventos RedotsClub.',
+    descriptionPT: 'Como planejar, produzir e maximizar o impacto dos eventos RedotsClub.', descriptionES: 'Cómo planificar, producir y maximizar el impacto de los eventos de RedotsClub.', descriptionZH: '如何規劃、執行並最大化RedotsClub活動的影響力。',
     articles: [
       {
         id: 'events-strategy',
@@ -119,9 +119,9 @@ export const PILLARS = [
     ]
   },
   {
-    id: 'member-retention', num: '5', name: 'Member Retention', namePT: 'Retenção de Membros',
+    id: 'member-retention', num: '5', name: 'Member Retention', namePT: 'Retenção de Membros', nameES: 'Retención de Miembros', nameZH: '會員留存',
     description: 'How to keep your best members engaged and build a self-sustaining community.',
-    descriptionPT: 'Como manter seus melhores membros engajados e construir uma comunidade autossustentável.',
+    descriptionPT: 'Como manter seus melhores membros engajados e construir uma comunidade autossustentável.', descriptionES: 'Cómo mantener a tus mejores miembros comprometidos y construir una comunidad autosustentable.', descriptionZH: '如何保持最優秀會員的參與度並建立自給自足的社群。',
     articles: [
       {
         id: 'member-perks',

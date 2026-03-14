@@ -24,6 +24,7 @@ function renderMarkdown(text) {
 // ── App ──────────────────────────────────────────────────────────────────────
 export default function App() {
   const [lang, setLang] = useState('en');
+  const [langOpen, setLangOpen] = useState(false);
   const [view, setView] = useState('home'); // 'home' | 'pillar' | 'quiz'
   const [activePillar, setActivePillar] = useState(null);
   const [activeArticle, setActiveArticle] = useState(null);
@@ -36,7 +37,19 @@ export default function App() {
   const [sending, setSending] = useState(false);
   const contentRef = useRef(null);
 
-  const t = (en, pt) => lang === 'pt' ? pt : en;
+  const LANGS = [
+    { code: 'en', label: 'English', flag: '🇬🇧' },
+    { code: 'pt', label: 'Português', flag: '🇧🇷' },
+    { code: 'es', label: 'Español', flag: '🇪🇸' },
+    { code: 'zh', label: '廣東話', flag: '🇭🇰' },
+  ];
+
+  const t = (en, pt, es, zh) => {
+    if (lang === 'pt') return pt || en;
+    if (lang === 'es') return es || en;
+    if (lang === 'zh') return zh || en;
+    return en;
+  };
 
   function goToPillar(pillar) {
     setActivePillar(pillar);
@@ -81,7 +94,7 @@ export default function App() {
     emailBody += `Name: ${submitterInfo.name}\n`;
     emailBody += `Country: ${submitterInfo.country}\n`;
     emailBody += `Email: ${submitterInfo.email}\n`;
-    emailBody += `Language: ${lang === 'pt' ? 'Portuguese' : 'English'}\n`;
+    emailBody += `Language: ${LANGS.find(l => l.code === lang)?.label || 'English'}\n`;
     emailBody += `Score (Multiple Choice): ${score}/${mcQuestions.length}\n\n`;
     emailBody += `MULTIPLE CHOICE ANSWERS\n`;
     emailBody += `------------------------\n`;
@@ -149,9 +162,29 @@ export default function App() {
             <div className="sidebar-tagline">Global Playbook</div>
           </div>
 
-          <div className="lang-toggle">
-            <button className={`lang-btn${lang === 'en' ? ' active' : ''}`} onClick={() => setLang('en')}>EN</button>
-            <button className={`lang-btn${lang === 'pt' ? ' active' : ''}`} onClick={() => setLang('pt')}>PT</button>
+          <div className="lang-selector">
+            <div className="lang-selected" onClick={() => setLangOpen(o => !o)}>
+              <span className="lang-selected-text">
+                <span className="lang-flag">{LANGS.find(l => l.code === lang)?.flag}</span>
+                {LANGS.find(l => l.code === lang)?.label}
+              </span>
+              <span className={`lang-chevron${langOpen ? ' open' : ''}`}>▼</span>
+            </div>
+            {langOpen && (
+              <div className="lang-dropdown">
+                {LANGS.map(l => (
+                  <button
+                    key={l.code}
+                    className={`lang-option${lang === l.code ? ' active' : ''}`}
+                    onClick={() => { setLang(l.code); setLangOpen(false); }}
+                  >
+                    <span className="lang-flag">{l.flag}</span>
+                    {l.label}
+                    <span className="lang-option-code">{l.code.toUpperCase()}</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           <nav className="sidebar-nav">
@@ -162,7 +195,7 @@ export default function App() {
                 onClick={() => { setView('home'); setSidebarOpen(false); }}
               >
                 <span className="pillar-num" style={{ background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)' }}>⌂</span>
-                <span className="pillar-name">{t('Overview', 'Visão Geral')}</span>
+                <span className="pillar-name">{t('Overview', 'Visão Geral', 'Resumen', '概覽')}</span>
               </button>
             </div>
 
@@ -176,7 +209,7 @@ export default function App() {
                   }}
                 >
                   <span className="pillar-num">{p.num}</span>
-                  <span className="pillar-name">{t(p.name, p.namePT)}</span>
+                  <span className="pillar-name">{lang === 'pt' ? p.namePT : lang === 'es' ? (p.nameES || p.name) : lang === 'zh' ? (p.nameZH || p.name) : p.name}</span>
                   <span className="pillar-arrow">▶</span>
                 </button>
                 <div className={`article-list${openPillars[p.id] ? ' open' : ''}`}>
@@ -186,7 +219,7 @@ export default function App() {
                       className={`article-link${activeArticle?.id === a.id ? ' active' : ''}`}
                       onClick={() => goToArticle(p, a)}
                     >
-                      {t(a.title, a.titlePT)}
+                      {lang==='pt'?a.titlePT:lang==='es'?(a.titleES||a.title):lang==='zh'?(a.titleZH||a.title):a.title}
                     </a>
                   ))}
                 </div>
@@ -197,7 +230,7 @@ export default function App() {
               className={`sidebar-quiz-btn${view === 'quiz' ? ' active' : ''}`}
               onClick={() => { setView('quiz'); setQuizStep('intro'); setSidebarOpen(false); }}
             >
-              {t('📝 Take the Quiz', '📝 Fazer o Quiz')}
+              {t('📝 Take the Quiz', '📝 Fazer o Quiz', '📝 Tomar el Quiz', '📝 參加測驗')}
             </button>
           </nav>
         </aside>
@@ -208,15 +241,15 @@ export default function App() {
           {view === 'home' && (
             <>
               <div className="hero">
-                <div className="hero-eyebrow">RedotsClub — {t('Global Community Playbook', 'Playbook Global da Comunidade')}</div>
+                <div className="hero-eyebrow">RedotsClub — {t('Global Community Playbook', 'Playbook Global da Comunidade', 'Guía Global de Comunidad', '全球社群指南')}</div>
                 <h1>{t(<>Great People.<br/>Exclusive Access.<br/><span>Unforgettable</span> Moments.</>, <>Grandes Pessoas.<br/>Acesso Exclusivo.<br/><span>Momentos</span> Inesquecíveis.</>)}</h1>
-                <p className="hero-sub">{t('A first-draft proposal for the RedotsClub Global Community Model — inspired by Superteam, built for a lifestyle-first audience.', 'Uma proposta inicial para o Modelo Global de Comunidade do RedotsClub — inspirado no Superteam, construído para um público focado em estilo de vida.')}</p>
+                <p className="hero-sub">{t('A first-draft proposal for the RedotsClub Global Community Model — inspired by Superteam, built for a lifestyle-first audience.', 'Uma proposta inicial para o Modelo Global de Comunidade do RedotsClub — inspirado no Superteam, construído para um público focado em estilo de vida.', 'Una propuesta inicial para el Modelo Global de Comunidad de RedotsClub — inspirado en Superteam, construido para una audiencia lifestyle.', 'RedotsClub全球社群模式初稿提案——以Superteam為靈感，為生活方式受眾而建。')}</p>
                 <div className="hero-meta">
                   {[
-                    { num: '5', label: t('Pillars', 'Pilares') },
-                    { num: '17', label: t('Articles', 'Artigos') },
-                    { num: '20', label: t('Quiz Questions', 'Perguntas do Quiz') },
-                    { num: '1000', label: t('Member Goal', 'Meta de Membros') },
+                    { num: '5', label: t('Pillars', 'Pilares', 'Pilares', '支柱') },
+                    { num: '17', label: t('Articles', 'Artigos', 'Artículos', '文章') },
+                    { num: '20', label: t('Quiz Questions', 'Perguntas do Quiz', 'Preguntas del Quiz', '測驗題目') },
+                    { num: '1000', label: t('Member Goal', 'Meta de Membros', 'Meta de Miembros', '會員目標') },
                   ].map(s => (
                     <div key={s.label} className="hero-stat">
                       <span className="hero-stat-num">{s.num}</span>
@@ -228,23 +261,23 @@ export default function App() {
 
               <div className="content-area">
                 <h2 style={{ fontFamily: 'Playfair Display, serif', fontSize: 26, color: 'var(--green)', marginBottom: 8 }}>
-                  {t('The Five Pillars', 'Os Cinco Pilares')}
+                  {t('The Five Pillars', 'Os Cinco Pilares', 'Los Cinco Pilares', '五大支柱')}
                 </h2>
                 <p style={{ color: 'var(--gray)', marginBottom: 0, fontSize: 15 }}>
-                  {t('Click any pillar to start reading.', 'Clique em qualquer pilar para começar a ler.')}
+                  {t('Click any pillar to start reading.', 'Clique em qualquer pilar para começar a ler.', 'Haz clic en cualquier pilar para comenzar a leer.', '點擊任意支柱開始閱讀。')}
                 </p>
                 <div className="welcome-grid">
                   {PILLARS.map(p => (
                     <div key={p.id} className="welcome-card" onClick={() => goToPillar(p)}>
-                      <div className="welcome-card-num">{t(`Pillar ${p.num}`, `Pilar ${p.num}`)} · {p.articles.length} {t('articles', 'artigos')}</div>
-                      <h3>{t(p.name, p.namePT)}</h3>
-                      <p>{t(p.description, p.descriptionPT)}</p>
+                      <div className="welcome-card-num">{lang==='pt'?`Pilar ${p.num}`:lang==='es'?`Pilar ${p.num}`:lang==='zh'?`支柱 ${p.num}`:`Pillar ${p.num}`} · {p.articles.length} {t('articles', 'artigos', 'artículos', '篇文章')}</div>
+                      <h3>{lang==='pt'?p.namePT:lang==='es'?(p.nameES||p.name):lang==='zh'?(p.nameZH||p.name):p.name}</h3>
+                      <p>{lang==='pt'?p.descriptionPT:lang==='es'?(p.descriptionES||p.description):lang==='zh'?(p.descriptionZH||p.description):p.description}</p>
                     </div>
                   ))}
                   <div className="welcome-card" onClick={() => { setView('quiz'); setQuizStep('intro'); }} style={{ borderLeft: '3px solid var(--green)' }}>
-                    <div className="welcome-card-num">20 {t('Questions', 'Perguntas')}</div>
-                    <h3>{t('Country Lead Quiz', 'Quiz do Líder de País')}</h3>
-                    <p>{t('Test your understanding of the playbook. Results sent to the RedotsClub global team.', 'Teste seu entendimento do playbook. Resultados enviados à equipe global do RedotsClub.')}</p>
+                    <div className="welcome-card-num">20 {t('Questions', 'Perguntas', 'Preguntas', '問題')}</div>
+                    <h3>{t('Country Lead Quiz', 'Quiz do Líder de País', 'Quiz del Líder de País', '國家負責人測驗')}</h3>
+                    <p>{t('Test your understanding of the playbook. Results sent to the RedotsClub global team.', 'Teste seu entendimento do playbook. Resultados enviados à equipe global do RedotsClub.', 'Pon a prueba tu comprensión del playbook. Resultados enviados al equipo global de RedotsClub.', '測試你對手冊的理解。結果將發送給RedotsClub全球團隊。')}</p>
                   </div>
                 </div>
               </div>
@@ -255,8 +288,8 @@ export default function App() {
           {view === 'pillar' && activePillar && activeArticle && (
             <>
               <div className="hero" style={{ padding: '48px 72px' }}>
-                <div className="hero-eyebrow">{t(`Pillar ${activePillar.num}`, `Pilar ${activePillar.num}`)} · {t(activePillar.name, activePillar.namePT)}</div>
-                <h1 style={{ fontSize: 38 }}>{t(activeArticle.title, activeArticle.titlePT)}</h1>
+                <div className="hero-eyebrow">{lang==='pt'?`Pilar ${activePillar.num}`:lang==='es'?`Pilar ${activePillar.num}`:lang==='zh'?`支柱 ${activePillar.num}`:`Pillar ${activePillar.num}`} · {lang==='pt'?activePillar.namePT:lang==='es'?(activePillar.nameES||activePillar.name):lang==='zh'?(activePillar.nameZH||activePillar.name):activePillar.name}</div>
+                <h1 style={{ fontSize: 38 }}>{lang==='pt'?activeArticle.titlePT:lang==='es'?(activeArticle.titleES||activeArticle.title):lang==='zh'?(activeArticle.titleZH||activeArticle.title):activeArticle.title}</h1>
               </div>
 
               <div className="content-area">
@@ -268,7 +301,7 @@ export default function App() {
                       className={`article-tab${activeArticle.id === a.id ? ' active' : ''}`}
                       onClick={() => { setActiveArticle(a); if (contentRef.current) contentRef.current.scrollTop = 0; }}
                     >
-                      {t(a.title, a.titlePT)}
+                      {lang==='pt'?a.titlePT:lang==='es'?(a.titleES||a.title):lang==='zh'?(a.titleZH||a.title):a.title}
                     </button>
                   ))}
                 </div>
@@ -276,11 +309,11 @@ export default function App() {
                 {/* Article content */}
                 <div className="article-content">
                   <div className="article-meta">
-                    <span className="article-pillar-tag">{t(activePillar.name, activePillar.namePT)}</span>
+                    <span className="article-pillar-tag">{lang==='pt'?activePillar.namePT:lang==='es'?(activePillar.nameES||activePillar.name):lang==='zh'?(activePillar.nameZH||activePillar.name):activePillar.name}</span>
                     <span className="article-author">{activeArticle.author}</span>
                   </div>
                   <div dangerouslySetInnerHTML={{
-                    __html: renderMarkdown(t(activeArticle.content, activeArticle.contentPT))
+                    __html: renderMarkdown(lang==='pt'?activeArticle.contentPT:lang==='es'?(activeArticle.contentES||activeArticle.content):lang==='zh'?(activeArticle.contentZH||activeArticle.content):activeArticle.content)
                   }} />
                 </div>
 
@@ -303,7 +336,7 @@ export default function App() {
                           </button>
                         ) : (
                           <button className="quiz-btn quiz-btn-primary" onClick={() => { setView('quiz'); setQuizStep('intro'); }}>
-                            {t('Take the Quiz →', 'Fazer o Quiz →')}
+                            {t('Take the Quiz →', 'Fazer o Quiz →', 'Tomar el Quiz →', '參加測驗 →')}
                           </button>
                         )}
                       </>
@@ -318,8 +351,8 @@ export default function App() {
           {view === 'quiz' && (
             <>
               <div className="hero" style={{ padding: '48px 72px' }}>
-                <div className="hero-eyebrow">{t('Country Lead Assessment', 'Avaliação do Líder de País')}</div>
-                <h1 style={{ fontSize: 38 }}>{t('Playbook Quiz', 'Quiz do Playbook')}</h1>
+                <div className="hero-eyebrow">{t('Country Lead Assessment', 'Avaliação do Líder de País', 'Evaluación del Líder de País', '國家負責人評估')}</div>
+                <h1 style={{ fontSize: 38 }}>{t('Playbook Quiz', 'Quiz do Playbook', 'Quiz del Playbook', '手冊測驗')}</h1>
               </div>
 
               <div className="content-area">
@@ -329,24 +362,24 @@ export default function App() {
                   {quizStep === 'intro' && (
                     <>
                       <div className="quiz-hero">
-                        <h2>{t('Ready to be tested?', 'Pronto para ser testado?')}</h2>
-                        <p>{t('20 questions — 15 multiple choice + 5 scenario responses. Your answers will be sent to the RedotsClub global team at lucas@redotpay.com.', '20 questões — 15 de múltipla escolha + 5 respostas de cenário. Suas respostas serão enviadas para a equipe global do RedotsClub em lucas@redotpay.com.')}</p>
+                        <h2>{t('Ready to be tested?', 'Pronto para ser testado?', '¿Listo para ser evaluado?', '準備好接受測試了嗎？')}</h2>
+                        <p>{t('20 questions — 15 multiple choice + 5 scenario responses. Your answers will be sent to the RedotsClub global team at lucas@redotpay.com.', '20 questões — 15 de múltipla escolha + 5 respostas de cenário. Suas respostas serão enviadas para a equipe global do RedotsClub em lucas@redotpay.com.', '20 preguntas — 15 de opción múltiple + 5 respuestas de escenario. Tus respuestas se enviarán al equipo global de RedotsClub en lucas@redotpay.com.', '20道題目——15道選擇題 + 5道情境回答。您的答案將發送至RedotsClub全球團隊lucas@redotpay.com。')}</p>
                       </div>
                       <div className="question-card">
-                        <div className="question-type">{t('Before you begin', 'Antes de começar')}</div>
+                        <div className="question-type">{t('Before you begin', 'Antes de começar', 'Antes de comenzar', '開始之前')}</div>
                         <p style={{ fontSize: 15, color: '#444', lineHeight: 1.6 }}>
-                          {t('This quiz tests your understanding of the RedotsClub Global Playbook. There are no tricks — the answers are in the articles. The scenario questions have no single correct answer; they are assessed on quality of reasoning.', 'Este quiz testa seu entendimento do Playbook Global do RedotsClub. Não há pegadinhas — as respostas estão nos artigos. As questões de cenário não têm uma única resposta correta; são avaliadas com base na qualidade do raciocínio.')}
+                          {t('This quiz tests your understanding of the RedotsClub Global Playbook. There are no tricks — the answers are in the articles. The scenario questions have no single correct answer; they are assessed on quality of reasoning.', 'Este quiz testa seu entendimento do Playbook Global do RedotsClub. Não há pegadinhas — as respostas estão nos artigos. As questões de cenário não têm uma única resposta correta; são avaliadas com base na qualidade do raciocínio.', 'Este quiz evalúa tu comprensión del Playbook Global de RedotsClub. No hay trucos — las respuestas están en los artículos. Las preguntas de escenario no tienen una única respuesta correcta; se evalúan por la calidad del razonamiento.', '此測驗測試您對RedotsClub全球手冊的理解。沒有陷阱——答案就在文章中。情境問題沒有單一正確答案；以推理質量評估。')}
                         </p>
                         <ul style={{ margin: '16px 0 0 20px', fontSize: 14, color: 'var(--gray)', lineHeight: 1.8 }}>
-                          <li>{t('15 Multiple choice questions', '15 Questões de múltipla escolha')}</li>
-                          <li>{t('5 Scenario responses (open-ended)', '5 Respostas de cenário (abertas)')}</li>
-                          <li>{t('Results sent to lucas@redotpay.com', 'Resultados enviados para lucas@redotpay.com')}</li>
+                          <li>{t('15 Multiple choice questions', '15 Questões de múltipla escolha', '15 Preguntas de opción múltiple', '15道選擇題')}</li>
+                          <li>{t('5 Scenario responses (open-ended)', '5 Respostas de cenário (abertas)', '5 Respuestas de escenario (abiertas)', '5道開放式情境回答')}</li>
+                          <li>{t('Results sent to lucas@redotpay.com', 'Resultados enviados para lucas@redotpay.com', 'Resultados enviados a lucas@redotpay.com', '結果已發送至lucas@redotpay.com')}</li>
                         </ul>
                       </div>
                       <div className="quiz-nav">
                         <span />
                         <button className="quiz-btn quiz-btn-primary" onClick={() => setQuizStep('form')}>
-                          {t('Start Quiz →', 'Iniciar Quiz →')}
+                          {t('Start Quiz →', 'Iniciar Quiz →', 'Iniciar Quiz →', '開始測驗 →')}
                         </button>
                       </div>
                     </>
@@ -356,32 +389,32 @@ export default function App() {
                   {quizStep === 'form' && (
                     <>
                       <div className="quiz-form">
-                        <h3>{t('Your Details', 'Seus Dados')}</h3>
-                        <p>{t('This information will be sent with your quiz results.', 'Esta informação será enviada com seus resultados do quiz.')}</p>
+                        <h3>{t('Your Details', 'Seus Dados', 'Tus Datos', '您的資料')}</h3>
+                        <p>{t('This information will be sent with your quiz results.', 'Esta informação será enviada com seus resultados do quiz.', 'Esta información se enviará con tus resultados del quiz.', '此資訊將與您的測驗結果一併發送。')}</p>
                         <div className="form-group">
-                          <label className="form-label">{t('Full Name', 'Nome Completo')}</label>
-                          <input className="form-input" placeholder={t('Your name', 'Seu nome')} value={submitterInfo.name}
+                          <label className="form-label">{t('Full Name', 'Nome Completo', 'Nombre Completo', '全名')}</label>
+                          <input className="form-input" placeholder={t('Your name', 'Seu nome', 'Tu nombre', '您的姓名')} value={submitterInfo.name}
                             onChange={e => setSubmitterInfo(i => ({ ...i, name: e.target.value }))} />
                         </div>
                         <div className="form-group">
-                          <label className="form-label">{t('Country / Region', 'País / Região')}</label>
-                          <input className="form-input" placeholder={t('e.g. Brazil, Germany, Vietnam', 'ex. Brasil, Alemanha, Vietnã')} value={submitterInfo.country}
+                          <label className="form-label">{t('Country / Region', 'País / Região', 'País / Región', '國家／地區')}</label>
+                          <input className="form-input" placeholder={t('e.g. Brazil, Germany, Vietnam', 'ex. Brasil, Alemanha, Vietnã', 'ej. Brasil, Alemania, Vietnam', '例如：巴西、德國、越南')} value={submitterInfo.country}
                             onChange={e => setSubmitterInfo(i => ({ ...i, country: e.target.value }))} />
                         </div>
                         <div className="form-group">
-                          <label className="form-label">{t('Email Address', 'Endereço de Email')}</label>
-                          <input className="form-input" type="email" placeholder={t('your@email.com', 'seu@email.com')} value={submitterInfo.email}
+                          <label className="form-label">{t('Email Address', 'Endereço de Email', 'Dirección de Email', '電郵地址')}</label>
+                          <input className="form-input" type="email" placeholder={t('your@email.com', 'seu@email.com', 'tu@email.com', 'your@email.com')} value={submitterInfo.email}
                             onChange={e => setSubmitterInfo(i => ({ ...i, email: e.target.value }))} />
                         </div>
                       </div>
                       <div className="quiz-nav">
-                        <button className="quiz-btn quiz-btn-secondary" onClick={() => setQuizStep('intro')}>{t('← Back', '← Voltar')}</button>
+                        <button className="quiz-btn quiz-btn-secondary" onClick={() => setQuizStep('intro')}>{t('← Back', '← Voltar', '← Atrás', '← 返回')}</button>
                         <button
                           className="quiz-btn quiz-btn-primary"
                           disabled={!submitterInfo.name || !submitterInfo.country || !submitterInfo.email}
                           onClick={() => { setCurrentQ(0); setQuizStep('questions'); }}
                         >
-                          {t('Begin Questions →', 'Iniciar Questões →')}
+                          {t('Begin Questions →', 'Iniciar Questões →', 'Comenzar Preguntas →', '開始答題 →')}
                         </button>
                       </div>
                     </>
@@ -402,9 +435,9 @@ export default function App() {
                         return (
                           <div className="question-card" key={q.id}>
                             <div className="question-type">
-                              {t(q.typeLabel, q.typeLabelPT)} · {t(`Question ${q.id}`, `Questão ${q.id}`)}
+                              {lang==='pt'?q.typeLabelPT:lang==='es'?(q.typeLabelES||q.typeLabel):lang==='zh'?(q.typeLabelZH||q.typeLabel):q.typeLabel} · {t(`Question ${q.id}`, `Questão ${q.id}`)}
                             </div>
-                            <div className="question-text">{t(q.question, q.questionPT)}</div>
+                            <div className="question-text">{lang==='pt'?q.questionPT:lang==='es'?(q.questionES||q.question):lang==='zh'?(q.questionZH||q.question):q.question}</div>
 
                             {q.type === 'multiple-choice' && (
                               <div className="options-grid">
@@ -415,7 +448,7 @@ export default function App() {
                                     onClick={() => handleAnswer(q.id, i)}
                                   >
                                     <span className="option-letter">{['A', 'B', 'C', 'D'][i]}</span>
-                                    <span className="option-text">{lang === 'pt' ? q.optionsPT[i] : opt}</span>
+                                    <span className="option-text">{lang==='pt'?q.optionsPT[i]:lang==='es'?(q.optionsES?q.optionsES[i]:opt):lang==='zh'?(q.optionsZH?q.optionsZH[i]:opt):opt}</span>
                                   </button>
                                 ))}
                               </div>
@@ -424,7 +457,7 @@ export default function App() {
                             {q.type === 'open-ended' && (
                               <textarea
                                 className="textarea-answer"
-                                placeholder={t('Write your response here... There is no single correct answer — focus on quality of reasoning and practical thinking.', 'Escreva sua resposta aqui... Não há uma única resposta correta — foque na qualidade do raciocínio e no pensamento prático.')}
+                                placeholder={t('Write your response here... There is no single correct answer — focus on quality of reasoning and practical thinking.', 'Escreva sua resposta aqui... Não há uma única resposta correta — foque na qualidade do raciocínio e no pensamento prático.', 'Escribe tu respuesta aquí... No hay una única respuesta correcta — enfócate en la calidad del razonamiento y el pensamiento práctico.', '在此填寫您的回答……沒有單一正確答案——專注於推理質量和實際思考。')}
                                 value={quizAnswers[q.id] || ''}
                                 onChange={e => handleAnswer(q.id, e.target.value)}
                               />
@@ -436,16 +469,16 @@ export default function App() {
                       <div className="quiz-nav">
                         {currentQ > 0 ? (
                           <button className="quiz-btn quiz-btn-secondary" onClick={() => setCurrentQ(q => q - 1)}>
-                            {t('← Previous', '← Anterior')}
+                            {t('← Previous', '← Anterior', '← Anterior', '← 上一題')}
                           </button>
                         ) : <span />}
                         {currentQ < QUIZ_QUESTIONS.length - 1 ? (
                           <button className="quiz-btn quiz-btn-primary" disabled={!canProceed()} onClick={() => setCurrentQ(q => q + 1)}>
-                            {t('Next →', 'Próximo →')}
+                            {t('Next →', 'Próximo →', 'Siguiente →', '下一題 →')}
                           </button>
                         ) : (
                           <button className="quiz-btn quiz-btn-primary" disabled={!canProceed() || sending} onClick={submitQuiz}>
-                            {sending ? t('Sending...', 'Enviando...') : t('Submit Quiz →', 'Enviar Quiz →')}
+                            {sending ? t('Sending...', 'Enviando...', 'Enviando...', '發送中...') : t('Submit Quiz →', 'Enviar Quiz →', 'Enviar Quiz →', '提交測驗 →')}
                           </button>
                         )}
                       </div>
@@ -457,13 +490,13 @@ export default function App() {
                     <div className="score-screen">
                       <div className="score-circle">
                         <span className="score-num">{mcScore}/15</span>
-                        <span className="score-label">{t('Score', 'Pontuação')}</span>
+                        <span className="score-label">{t('Score', 'Pontuação', 'Puntuación', '得分')}</span>
                       </div>
                       <h2>
-                        {mcScore >= 12 ? t('Outstanding! 🏆', 'Excelente! 🏆') :
-                         mcScore >= 9  ? t('Well done! 🎯', 'Muito bem! 🎯') :
-                         mcScore >= 6  ? t('Good effort. 📚', 'Bom esforço. 📚') :
-                                         t('Keep studying. 💪', 'Continue estudando. 💪')}
+                        {mcScore >= 12 ? t('Outstanding! 🏆', 'Excelente! 🏆', '¡Sobresaliente! 🏆', '出色！🏆') :
+                         mcScore >= 9  ? t('Well done! 🎯', 'Muito bem! 🎯', '¡Bien hecho! 🎯', '做得好！🎯') :
+                         mcScore >= 6  ? t('Good effort. 📚', 'Bom esforço. 📚', 'Buen esfuerzo. 📚', '繼續努力。📚') :
+                                         t('Keep studying. 💪', 'Continue estudando. 💪', 'Sigue estudiando. 💪', '繼續學習。💪')}
                       </h2>
                       <p>
                         {t(
@@ -472,14 +505,14 @@ export default function App() {
                         )}
                       </p>
                       <div className="score-sent-badge">
-                        ✓ {t('Results sent to lucas@redotpay.com', 'Resultados enviados para lucas@redotpay.com')}
+                        ✓ {t('Results sent to lucas@redotpay.com', 'Resultados enviados para lucas@redotpay.com', 'Resultados enviados a lucas@redotpay.com', '結果已發送至lucas@redotpay.com')}
                       </div>
                       <div style={{ marginTop: 32, display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
                         <button className="quiz-btn quiz-btn-secondary" onClick={() => { setView('home'); }}>
-                          {t('← Back to Playbook', '← Voltar ao Playbook')}
+                          {t('← Back to Playbook', '← Voltar ao Playbook', '← Volver al Playbook', '← 返回手冊')}
                         </button>
                         <button className="quiz-btn quiz-btn-primary" onClick={() => { setQuizStep('intro'); setQuizAnswers({}); setCurrentQ(0); }}>
-                          {t('Retake Quiz', 'Refazer Quiz')}
+                          {t('Retake Quiz', 'Refazer Quiz', 'Repetir Quiz', '重新測驗')}
                         </button>
                       </div>
                     </div>
