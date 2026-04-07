@@ -273,9 +273,9 @@ export default function App() {
                 <div className="hero-stats">
                   {[
                     {num:'5',    label: tl('Pillars','Pilares','Pilares','支柱')},
-                    {num:'17',   label: tl('Articles','Artigos','Artículos','文章')},
-                    {num:'100',  label: tl('Guests / Chapter','Convidados / Cap.','Huéspedes / Cap.','訪客/分部')},
-                    {num:'500',  label: tl('Members Goal','Meta de Membros','Meta de Miembros','會員目標')},
+                    {num:'5',    label: tl('Regions','Regiões','Regiones','地區')},
+                    {num:'500',  label: tl('Members by Dec 2026','Membros até Dez 2026','Miembros Dic 2026','2026年12月前會員')},
+                    {num:'25',   label: tl('Chapters by Dec 2026','Capítulos até Dez 2026','Capítulos Dic 2026','2026年12月前分部')},
                   ].map(s=>(
                     <div key={s.label} className="hero-stat">
                       <span className="hero-stat-num"><Counter end={parseInt(s.num)} /></span>
