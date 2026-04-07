@@ -1,21 +1,16 @@
-export const runtime = 'experimental-edge';
-
 import { NextResponse } from 'next/server';
 
-const PASSWORD = 'wewillwin';
-const COOKIE = 'rc_auth';
+export function middleware(request) {
+  const cookie = request.cookies.get('rc_auth');
+  const { pathname } = request.nextUrl;
 
-export function middleware(req) {
-  const cookie = req.cookies.get(COOKIE)?.value;
-  if (cookie === PASSWORD) return NextResponse.next();
+  if (pathname === '/login') return NextResponse.next();
+  if (cookie?.value === 'wewillwin') return NextResponse.next();
 
-  const url = req.nextUrl.clone();
-  if (url.pathname === '/login') return NextResponse.next();
-
-  url.pathname = '/login';
-  return NextResponse.redirect(url);
+  const loginUrl = new URL('/login', request.url);
+  return NextResponse.redirect(loginUrl);
 }
 
 export const config = {
-  matcher: ['/((?!_next|favicon.ico|logo.svg).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|logo.svg).*)'],
 };
