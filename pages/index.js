@@ -114,7 +114,7 @@ export default function App() {
         {/* ── SIDEBAR ── */}
         <aside className={`sidebar${sidebarOpen?' open':''}`}>
           <div className="sidebar-logo">
-            <img src="/logo.png" alt="RedotsClub" />
+            <svg width="140" viewBox="0 0 666 250" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M125.129 0H62.5635V62.5H125.129Z" fill="white"/><path d="M125.129 125H62.5635V187.5H125.129V125Z" fill="white"/><path d="M62.565 0H0V62.5H62.565Z" fill="white"/><path d="M62.565 62.5H0V125H62.565V62.5Z" fill="white"/><path d="M62.565 125H0V187.5H62.565V125Z" fill="white"/><path d="M62.565 187.5H0V250H62.565V187.5Z" fill="white"/><path d="M187.698 0H125.133V62.5H187.698Z" fill="white"/><path d="M187.565 125H125V187.5H187.565V125Z" fill="white"/><path d="M250 62.5H187.436V125H250V62.5Z" fill="white"/><path d="M187.436 62.5H250C250 27.98 221.953 0 187.436 0V62.5Z" fill="white"/><path d="M250 187.241H187.436V249.742H250V187.241Z" fill="#FF1B64"/><path d="M187.565 187.241H125V249.742H187.565V187.241Z" fill="#FF1B64"/><text x="308" y="131" font-family="Arial Black,sans-serif" font-weight="900" font-size="80" fill="white">Redots</text><text x="308" y="235" font-family="Arial Black,sans-serif" font-weight="900" font-size="80" fill="#FF1B64">Club</text></svg>
             <div className="sidebar-tagline">Global Playbook</div>
           </div>
 
