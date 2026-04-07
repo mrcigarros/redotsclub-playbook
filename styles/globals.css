@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Montserrat:wght@400;500;600;700;800;900&display=swap');display=swap');
 
 :root {
   --pink:        #FF1B64;
@@ -18,7 +18,7 @@
   --gray-600:    #444444;
   --gray-700:    #2A2A2A;
   --sidebar-w:   280px;
-  --font-display:'Cormorant Garamond', Georgia, serif;
+  
   --font:        'Montserrat', sans-serif;
   --transition:  all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -35,7 +35,7 @@ body {
   cursor: default;
 }
 
-/* ─── NOISE TEXTURE OVERLAY ─── */
+/* â”€â”€â”€ NOISE TEXTURE OVERLAY â”€â”€â”€ */
 body::before {
   content: '';
   position: fixed;
@@ -46,10 +46,10 @@ body::before {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
 }
 
-/* ─── LAYOUT ─── */
+/* â”€â”€â”€ LAYOUT â”€â”€â”€ */
 .layout { display: flex; min-height: 100vh; position: relative; z-index: 1; }
 
-/* ─── SIDEBAR ─── */
+/* â”€â”€â”€ SIDEBAR â”€â”€â”€ */
 .sidebar {
   width: var(--sidebar-w);
   background: var(--black-soft);
@@ -78,7 +78,7 @@ body::before {
 .sidebar::-webkit-scrollbar { width: 2px; }
 .sidebar::-webkit-scrollbar-thumb { background: rgba(255,27,100,0.3); }
 
-/* ─── SIDEBAR LOGO ─── */
+/* â”€â”€â”€ SIDEBAR LOGO â”€â”€â”€ */
 .sidebar-logo {
   padding: 28px 24px 22px;
   border-bottom: 1px solid rgba(255,255,255,0.05);
@@ -87,6 +87,7 @@ body::before {
 
 .sidebar-logo img {
   width: 140px;
+  filter: brightness(0) invert(1);
   display: block;
 }
 
@@ -101,7 +102,7 @@ body::before {
   opacity: 0.9;
 }
 
-/* ─── LANGUAGE SELECTOR ─── */
+/* â”€â”€â”€ LANGUAGE SELECTOR â”€â”€â”€ */
 .lang-selector {
   margin: 16px 16px 0;
   position: relative;
@@ -164,7 +165,7 @@ body::before {
   gap: 10px;
   padding: 11px 13px;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 800;
   color: rgba(255,255,255,0.5);
   cursor: pointer;
   transition: var(--transition);
@@ -188,7 +189,7 @@ body::before {
   margin-left: auto;
 }
 
-/* ─── SIDEBAR NAV ─── */
+/* â”€â”€â”€ SIDEBAR NAV â”€â”€â”€ */
 .sidebar-nav { padding: 20px 0 48px; flex: 1; }
 
 .pillar-group { margin-bottom: 1px; }
@@ -319,7 +320,7 @@ body::before {
 .sidebar-quiz-btn span, .sidebar-quiz-btn { position: relative; z-index: 1; }
 .sidebar-quiz-btn:hover { color: var(--white); border-color: var(--pink); }
 
-/* ─── MAIN ─── */
+/* â”€â”€â”€ MAIN â”€â”€â”€ */
 .main {
   margin-left: var(--sidebar-w);
   flex: 1;
@@ -327,7 +328,7 @@ body::before {
   background: var(--black);
 }
 
-/* ─── HERO ─── */
+/* â”€â”€â”€ HERO â”€â”€â”€ */
 .hero {
   background: var(--black-soft);
   padding: 80px 72px 72px;
@@ -390,9 +391,9 @@ body::before {
 }
 
 .hero h1 {
-  font-family: var(--font-display);
-  font-size: 60px;
-  font-weight: 600;
+  font-family: var(--font);
+  font-size: 68px;
+  font-weight: 800;
   color: var(--white);
   line-height: 1.08;
   max-width: 640px;
@@ -412,7 +413,7 @@ body::before {
 }
 
 .hero-sub {
-  font-size: 14px;
+  font-size: 15px;
   color: rgba(255,255,255,0.4);
   max-width: 480px;
   line-height: 1.8;
@@ -441,7 +442,7 @@ body::before {
 .hero-stat:last-child { border-right: none; }
 
 .hero-stat-num {
-  font-family: var(--font-display);
+  font-family: var(--font);
   font-size: 32px;
   font-weight: 700;
   color: var(--white);
@@ -457,15 +458,15 @@ body::before {
   margin-top: 4px;
 }
 
-/* ─── CONTENT AREA ─── */
+/* â”€â”€â”€ CONTENT AREA â”€â”€â”€ */
 .content-area {
   padding: 60px 72px 120px;
   max-width: 900px;
 }
 
-/* ─── WELCOME SECTION ─── */
+/* â”€â”€â”€ WELCOME SECTION â”€â”€â”€ */
 .welcome-section-heading {
-  font-family: var(--font-display);
+  font-family: var(--font);
   font-size: 13px;
   font-weight: 400;
   color: rgba(255,255,255,0.25);
@@ -475,9 +476,9 @@ body::before {
 }
 
 .welcome-section-title {
-  font-family: var(--font-display);
-  font-size: 36px;
-  font-weight: 600;
+  font-family: var(--font);
+  font-size: 42px;
+  font-weight: 800;
   color: var(--white);
   margin-bottom: 48px;
   letter-spacing: -0.01em;
@@ -531,9 +532,9 @@ body::before {
 }
 
 .welcome-card h3 {
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 600;
+  font-family: var(--font);
+  font-size: 22px;
+  font-weight: 800;
   color: var(--white);
   margin-bottom: 8px;
   line-height: 1.2;
@@ -556,7 +557,7 @@ body::before {
 }
 
 .welcome-card-quiz::after {
-  content: '→';
+  content: 'â†’';
   position: absolute;
   bottom: 24px; right: 24px;
   font-size: 18px;
@@ -572,7 +573,7 @@ body::before {
   transform: translateX(0);
 }
 
-/* ─── ARTICLE AREA ─── */
+/* â”€â”€â”€ ARTICLE AREA â”€â”€â”€ */
 .article-tabs {
   display: flex;
   flex-wrap: wrap;
@@ -638,14 +639,14 @@ body::before {
 .article-author {
   font-size: 11px;
   color: rgba(255,255,255,0.25);
-  font-weight: 600;
+  font-weight: 800;
   letter-spacing: 0.05em;
 }
 
 .article-content h1 {
-  font-family: var(--font-display);
-  font-size: 40px;
-  font-weight: 600;
+  font-family: var(--font);
+  font-size: 46px;
+  font-weight: 800;
   color: var(--white);
   line-height: 1.15;
   margin-bottom: 28px;
@@ -655,9 +656,9 @@ body::before {
 }
 
 .article-content h2 {
-  font-family: var(--font-display);
-  font-size: 24px;
-  font-weight: 600;
+  font-family: var(--font);
+  font-size: 26px;
+  font-weight: 800;
   color: var(--white);
   margin: 40px 0 12px;
   letter-spacing: -0.01em;
@@ -674,7 +675,7 @@ body::before {
 }
 
 .article-content p {
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.85;
   color: rgba(255,255,255,0.6);
   margin-bottom: 16px;
@@ -706,7 +707,7 @@ body::before {
   border-left: 2px solid var(--pink);
   padding: 16px 20px;
   margin: 20px 0;
-  font-size: 14px;
+  font-size: 15px;
   color: rgba(255,255,255,0.5);
   font-weight: 400;
   line-height: 1.75;
@@ -714,7 +715,7 @@ body::before {
 
 .note-box strong { color: var(--pink) !important; }
 
-/* ─── QUIZ ─── */
+/* â”€â”€â”€ QUIZ â”€â”€â”€ */
 .quiz-container { max-width: 680px; }
 
 .quiz-hero {
@@ -738,16 +739,16 @@ body::before {
 }
 
 .quiz-hero h2 {
-  font-family: var(--font-display);
-  font-size: 30px;
-  font-weight: 600;
+  font-family: var(--font);
+  font-size: 34px;
+  font-weight: 800;
   color: var(--white);
   margin-bottom: 10px;
   letter-spacing: -0.01em;
 }
 
 .quiz-hero p {
-  font-size: 13.5px;
+  font-size: 15px;
   color: rgba(255,255,255,0.4);
   max-width: 460px;
   font-weight: 400;
@@ -802,9 +803,9 @@ body::before {
 }
 
 .question-text {
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 600;
+  font-family: var(--font);
+  font-size: 22px;
+  font-weight: 800;
   color: var(--white);
   line-height: 1.45;
   margin-bottom: 28px;
@@ -865,7 +866,7 @@ body::before {
 }
 
 .option-text {
-  font-size: 13.5px;
+  font-size: 15px;
   color: rgba(255,255,255,0.55);
   line-height: 1.6;
   padding-top: 2px;
@@ -881,7 +882,7 @@ body::before {
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 2px;
   font-family: var(--font);
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.7;
   color: rgba(255,255,255,0.75);
   background: rgba(255,255,255,0.03);
@@ -957,9 +958,9 @@ body::before {
 }
 
 .quiz-form h3 {
-  font-family: var(--font-display);
-  font-size: 24px;
-  font-weight: 600;
+  font-family: var(--font);
+  font-size: 26px;
+  font-weight: 800;
   color: var(--white);
   margin-bottom: 6px;
   letter-spacing: -0.01em;
@@ -991,7 +992,7 @@ body::before {
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 2px;
   font-family: var(--font);
-  font-size: 14px;
+  font-size: 15px;
   color: rgba(255,255,255,0.8);
   background: rgba(255,255,255,0.03);
   outline: none;
@@ -1034,7 +1035,7 @@ body::before {
 }
 
 .score-num {
-  font-family: var(--font-display);
+  font-family: var(--font);
   font-size: 34px;
   font-weight: 700;
   color: var(--pink);
@@ -1051,16 +1052,16 @@ body::before {
 }
 
 .score-screen h2 {
-  font-family: var(--font-display);
+  font-family: var(--font);
   font-size: 28px;
-  font-weight: 600;
+  font-weight: 800;
   color: var(--white);
   margin-bottom: 12px;
   letter-spacing: -0.01em;
 }
 
 .score-screen p {
-  font-size: 14px;
+  font-size: 15px;
   color: rgba(255,255,255,0.35);
   max-width: 400px;
   margin: 0 auto 32px;
@@ -1083,7 +1084,7 @@ body::before {
   text-transform: uppercase;
 }
 
-/* ─── MOBILE ─── */
+/* â”€â”€â”€ MOBILE â”€â”€â”€ */
 .mobile-toggle {
   display: none;
   position: fixed;
@@ -1094,7 +1095,7 @@ body::before {
   border: none;
   border-radius: 2px;
   width: 36px; height: 36px;
-  font-size: 15px;
+  font-size: 16px;
   cursor: pointer;
   align-items: center;
   justify-content: center;
