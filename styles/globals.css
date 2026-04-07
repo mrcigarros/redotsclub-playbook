@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
 
 :root {
   --pink:        #FF1B64;
@@ -18,7 +18,7 @@
   --gray-600:    #444444;
   --gray-700:    #2A2A2A;
   --sidebar-w:   280px;
-  --font-display:'Cormorant Garamond', Georgia, serif;
+  --font-display:'Montserrat', sans-serif;
   --font:        'Montserrat', sans-serif;
   --transition:  all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -391,7 +391,7 @@ body::before {
 
 .hero h1 {
   font-family: var(--font-display);
-  font-size: 60px;
+  font-size: 68px;
   font-weight: 600;
   color: var(--white);
   line-height: 1.08;
@@ -412,7 +412,7 @@ body::before {
 }
 
 .hero-sub {
-  font-size: 14px;
+  font-size: 15px;
   color: rgba(255,255,255,0.4);
   max-width: 480px;
   line-height: 1.8;
@@ -476,7 +476,7 @@ body::before {
 
 .welcome-section-title {
   font-family: var(--font-display);
-  font-size: 36px;
+  font-size: 42px;
   font-weight: 600;
   color: var(--white);
   margin-bottom: 48px;
@@ -644,7 +644,7 @@ body::before {
 
 .article-content h1 {
   font-family: var(--font-display);
-  font-size: 40px;
+  font-size: 46px;
   font-weight: 600;
   color: var(--white);
   line-height: 1.15;
@@ -674,7 +674,7 @@ body::before {
 }
 
 .article-content p {
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.85;
   color: rgba(255,255,255,0.6);
   margin-bottom: 16px;
@@ -706,7 +706,7 @@ body::before {
   border-left: 2px solid var(--pink);
   padding: 16px 20px;
   margin: 20px 0;
-  font-size: 14px;
+  font-size: 15px;
   color: rgba(255,255,255,0.5);
   font-weight: 400;
   line-height: 1.75;
@@ -881,7 +881,7 @@ body::before {
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 2px;
   font-family: var(--font);
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.7;
   color: rgba(255,255,255,0.75);
   background: rgba(255,255,255,0.03);
@@ -991,7 +991,7 @@ body::before {
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 2px;
   font-family: var(--font);
-  font-size: 14px;
+  font-size: 15px;
   color: rgba(255,255,255,0.8);
   background: rgba(255,255,255,0.03);
   outline: none;
@@ -1060,7 +1060,7 @@ body::before {
 }
 
 .score-screen p {
-  font-size: 14px;
+  font-size: 15px;
   color: rgba(255,255,255,0.35);
   max-width: 400px;
   margin: 0 auto 32px;
@@ -1094,7 +1094,7 @@ body::before {
   border: none;
   border-radius: 2px;
   width: 36px; height: 36px;
-  font-size: 15px;
+  font-size: 16px;
   cursor: pointer;
   align-items: center;
   justify-content: center;
