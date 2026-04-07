@@ -29,6 +29,7 @@ function renderMd(text) {
 // Scroll reveal hook
 function useReveal() {
   useEffect(() => {
+    if (typeof window === 'undefined') return;
     const els = document.querySelectorAll('.reveal');
     if (!els.length) return;
     const obs = new IntersectionObserver(entries => {
@@ -44,6 +45,7 @@ function Counter({ end, duration = 1500 }) {
   const [val, setVal] = useState(0);
   const ref = useRef(null);
   useEffect(() => {
+    if (typeof window === 'undefined') return;
     const obs = new IntersectionObserver(([e]) => {
       if (!e.isIntersecting) return;
       obs.disconnect();
