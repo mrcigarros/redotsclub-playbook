@@ -1,73 +1,29 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import Head from 'next/head';
 import { PILLARS, QUIZ_QUESTIONS } from '../data/content';
 
 const LANGS = [
-  { code:'en', label:'English',   flag:'🇬🇧' },
-  { code:'pt', label:'Português', flag:'🇧🇷' },
-  { code:'es', label:'Español',   flag:'🇪🇸' },
-  { code:'zh', label:'廣東話',    flag:'🇭🇰' },
+  { code: 'en', label: 'English',   flag: '🇬🇧' },
+  { code: 'pt', label: 'Português', flag: '🇧🇷' },
+  { code: 'es', label: 'Español',   flag: '🇪🇸' },
+  { code: 'zh', label: '廣東話',    flag: '🇭🇰' },
 ];
 
 function renderMd(text) {
   if (!text) return '';
   return text
-    .replace(/^## (.+)$/gm,'<h2>$1</h2>')
-    .replace(/^### (.+)$/gm,'<h3>$1</h3>')
-    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
-    .replace(/^> (.+)$/gm,'<div class="note-box">$1</div>')
-    .replace(/^(\d+)\. \*\*(.+?)\*\* — (.+)$/gm,'<li><strong>$1. $2</strong> — $3</li>')
-    .replace(/^(\d+)\. \*\*(.+?)\*\*(.*)$/gm,'<li><strong>$1. $2</strong>$3</li>')
-    .replace(/^(\d+)\. (.+)$/gm,'<li>$1. $2</li>')
-    .replace(/^- (.+)$/gm,'<li>$1</li>')
-    .replace(/(<li>[\s\S]*?<\/li>\n?)+/g,m=>`<ul>${m}</ul>`)
-    .replace(/\n\n/g,'</p><p>')
-    .replace(/^(?!<[hud]|<li|<div|<\/ul|<p|<\/p)(.+)$/gm,'<p>$1</p>')
-    .replace(/<p><\/p>/g,'');
-}
-
-// Scroll reveal hook
-function useReveal() {
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const els = document.querySelectorAll('.reveal');
-    if (!els.length) return;
-    const obs = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { threshold: 0.1 });
-    els.forEach(el => obs.observe(el));
-    return () => obs.disconnect();
-  });
-}
-
-// Animated counter
-function Counter({ end, duration = 1500 }) {
-  const [val, setVal] = useState(0);
-  const ref = useRef(null);
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const obs = new IntersectionObserver(([e]) => {
-      if (!e.isIntersecting) return;
-      obs.disconnect();
-      const isK = String(end).includes('k') || String(end).includes('K');
-      const num = parseInt(String(end).replace(/[^0-9]/g,''));
-      let start = null;
-      const step = ts => {
-        if (!start) start = ts;
-        const p = Math.min((ts - start) / duration, 1);
-        const ease = 1 - Math.pow(1 - p, 3);
-        setVal(Math.floor(ease * num));
-        if (p < 1) requestAnimationFrame(step);
-        else setVal(num);
-      };
-      requestAnimationFrame(step);
-    }, { threshold: 0.5 });
-    if (ref.current) obs.observe(ref.current);
-    return () => obs.disconnect();
-  }, [end, duration]);
-  const isK = String(end).includes('k') || String(end).includes('K');
-  const hasSlash = String(end).includes('/');
-  return <span ref={ref}>{hasSlash ? end : isK ? val.toLocaleString() : val.toLocaleString()}{isK && !hasSlash ? '+' : ''}</span>;
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/^> (.+)$/gm, '<div class="note-box">$1</div>')
+    .replace(/^(\d+)\. \*\*(.+?)\*\* — (.+)$/gm, '<li><strong>$1. $2</strong> — $3</li>')
+    .replace(/^(\d+)\. \*\*(.+?)\*\*(.*)$/gm, '<li><strong>$1. $2</strong>$3</li>')
+    .replace(/^(\d+)\. (.+)$/gm, '<li>$1. $2</li>')
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    .replace(/(<li>[\s\S]*?<\/li>\n?)+/g, m => `<ul>${m}</ul>`)
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/^(?!<[hud]|<li|<div|<\/ul|<p|<\/p)(.+)$/gm, '<p>$1</p>')
+    .replace(/<p><\/p>/g, '');
 }
 
 export default function App() {
@@ -85,9 +41,7 @@ export default function App() {
   const [sending, setSending]         = useState(false);
   const mainRef = useRef(null);
 
-  useReveal();
-
-  const tl = (en,pt,es,zh) => {
+  const tl = (en, pt, es, zh) => {
     if (lang==='pt') return pt||en;
     if (lang==='es') return es||en;
     if (lang==='zh') return zh||en;
@@ -96,7 +50,7 @@ export default function App() {
   const pName  = p => lang==='pt'?p.namePT:lang==='es'?(p.nameES||p.name):lang==='zh'?(p.nameZH||p.name):p.name;
   const pDesc  = p => lang==='pt'?p.descriptionPT:lang==='es'?(p.descriptionES||p.description):lang==='zh'?(p.descriptionZH||p.description):p.description;
   const aTitle = a => lang==='pt'?a.titlePT:lang==='es'?(a.titleES||a.title):lang==='zh'?(a.titleZH||a.title):a.title;
-  const aContent=a => lang==='pt'?a.contentPT:lang==='es'?(a.contentES||a.content):lang==='zh'?(a.contentZH||a.content):a.content;
+  const aContent = a => lang==='pt'?a.contentPT:lang==='es'?(a.contentES||a.content):lang==='zh'?(a.contentZH||a.content):a.content;
   const qText  = q => lang==='pt'?q.questionPT:q.question;
   const qOpts  = (q,i) => lang==='pt'&&q.optionsPT?q.optionsPT[i]:q.options?q.options[i]:'';
   const qType  = q => lang==='pt'?q.typeLabelPT:q.typeLabel;
@@ -121,11 +75,14 @@ export default function App() {
     let body = `RedotsClub Global Playbook — Quiz Submission\n========================================\n\n`;
     body += `Name: ${submitterInfo.name}\nCountry: ${submitterInfo.country}\nEmail: ${submitterInfo.email}\n`;
     body += `Language: ${LANGS.find(l=>l.code===lang)?.label}\nScore: ${mcScore}/${mc.length}\n\n`;
-    mc.forEach(q => {
+    body += `MULTIPLE CHOICE\n---------------\n`;
+    mc.forEach(q=>{
       const ans=quizAnswers[q.id]; const ok=ans===q.correct;
-      body+=`\nQ${q.id}: ${q.question}\nAnswer: ${q.options?q.options[ans]:'—'}\nResult: ${ok?'✓ CORRECT':'✗ WRONG'}\n`;
+      body+=`\nQ${q.id}: ${q.question}\nAnswer: ${q.options?q.options[ans]:'—'}\nResult: ${ok?'✓ CORRECT':'✗ WRONG (Correct: '+(q.options?q.options[q.correct]:'')+')' }\n`;
     });
-    oe.forEach(q => { body+=`\nQ${q.id}: ${q.question}\nResponse:\n${quizAnswers[q.id]||'(No response)'}\n`; });
+    body += `\nSCENARIO RESPONSES\n------------------\n`;
+    oe.forEach(q=>{ body+=`\nQ${q.id}: ${q.question}\nResponse:\n${quizAnswers[q.id]||'(No response)'}\n`; });
+
     try {
       await fetch('https://api.emailjs.com/api/v1.0/email/send', {
         method:'POST', headers:{'Content-Type':'application/json'},
@@ -136,35 +93,11 @@ export default function App() {
             score:`${mcScore}/${mc.length}`, body }
         })
       });
-    } catch(e) {}
+    } catch(e) { /* silent fail */ }
     setSending(false); setQuizStep('done');
   }
 
   const pillarNum = p => lang==='pt'?`Pilar ${p.num}`:lang==='es'?`Pilar ${p.num}`:lang==='zh'?`支柱 ${p.num}`:`Pillar ${p.num}`;
-
-  const Logo = () => (
-    <div style={{display:'flex',alignItems:'center',gap:10}}>
-      <svg width="44" height="44" viewBox="0 0 250 250" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M125.129 0H62.5635V62.5H125.129V0Z" fill="white"/>
-        <path d="M125.129 125H62.5635V187.5H125.129V125Z" fill="white"/>
-        <path d="M62.565 0H0V62.5H62.565Z" fill="white"/>
-        <path d="M62.565 62.5H0V125H62.565V62.5Z" fill="white"/>
-        <path d="M62.565 125H0V187.5H62.565V125Z" fill="white"/>
-        <path d="M62.565 187.5H0V250H62.565V187.5Z" fill="white"/>
-        <path d="M187.698 0H125.133V62.5H187.698V0Z" fill="white"/>
-        <path d="M187.565 125H125V187.5H187.565V125Z" fill="white"/>
-        <path d="M250 62.5H187.436V125H250V62.5Z" fill="white"/>
-        <path d="M187.436 62.5H250C250 27.98 221.953 0 187.436 0V62.5Z" fill="white"/>
-        <path d="M250 187.241H187.436V249.742H250V187.241Z" fill="#FF1B64"/>
-        <path d="M187.565 187.241H125V249.742H187.565V187.241Z" fill="#FF1B64"/>
-      </svg>
-      <div style={{lineHeight:1.1}}>
-        <div style={{fontFamily:"Montserrat,sans-serif",fontWeight:900,fontSize:15,color:'white',letterSpacing:'-0.01em'}}>Redots</div>
-        <div style={{fontFamily:"Montserrat,sans-serif",fontWeight:900,fontSize:15,color:'#FF1B64',letterSpacing:'-0.01em'}}>Club</div>
-      </div>
-    </div>
-  );
-
 
   return (
     <>
@@ -172,7 +105,7 @@ export default function App() {
         <title>RedotsClub Global Playbook</title>
         <meta name="description" content="RedotsClub Global Community Playbook" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/logo.svg" />
+        <link rel="icon" href="/logo.png" />
       </Head>
 
       <button className="mobile-toggle" onClick={()=>setSidebarOpen(o=>!o)}>☰</button>
@@ -180,11 +113,12 @@ export default function App() {
       <div className="layout">
         {/* ── SIDEBAR ── */}
         <aside className={`sidebar${sidebarOpen?' open':''}`}>
-          <div className="sidebar-logo" onClick={()=>{setView('home');setSidebarOpen(false)}}>
-            <Logo />
+          <div className="sidebar-logo">
+            <img src="/logo.png" alt="RedotsClub" />
             <div className="sidebar-tagline">Global Playbook</div>
           </div>
 
+          {/* Language selector */}
           <div className="lang-selector">
             <div className="lang-selected" onClick={()=>setLangOpen(o=>!o)}>
               <span className="lang-selected-text">
@@ -197,7 +131,7 @@ export default function App() {
               <div className="lang-dropdown">
                 {LANGS.map(l=>(
                   <button key={l.code} className={`lang-option${lang===l.code?' active':''}`}
-                    onClick={()=>{setLang(l.code);setLangOpen(false)}}>
+                    onClick={()=>{setLang(l.code);setLangOpen(false);}}>
                     <span className="lang-flag">{l.flag}</span>
                     {l.label}
                     <span className="lang-option-code">{l.code.toUpperCase()}</span>
@@ -210,17 +144,16 @@ export default function App() {
           <nav className="sidebar-nav">
             <div className="pillar-group">
               <button className={`pillar-label${view==='home'?' active':''}`}
-                onClick={()=>{setView('home');setSidebarOpen(false)}}>
-                <span className="pillar-num" style={{background:'rgba(255,255,255,0.1)',boxShadow:'none'}}>⌂</span>
+                onClick={()=>{setView('home');setSidebarOpen(false);}}>
+                <span className="pillar-num" style={{background:'rgba(255,255,255,0.1)'}}>⌂</span>
                 <span className="pillar-name">{tl('Overview','Visão Geral','Resumen','概覽')}</span>
               </button>
             </div>
 
             {PILLARS.map(p=>(
               <div key={p.id} className="pillar-group">
-                <button
-                  className={`pillar-label${activePillar?.id===p.id?' active':''}${openPillars[p.id]?' open':''}`}
-                  onClick={()=>{setOpenPillars(o=>({...o,[p.id]:!o[p.id]}));goToPillar(p)}}>
+                <button className={`pillar-label${activePillar?.id===p.id?' active':''}${openPillars[p.id]?' open':''}`}
+                  onClick={()=>{setOpenPillars(o=>({...o,[p.id]:!o[p.id]}));goToPillar(p);}}>
                   <span className="pillar-num">{p.num}</span>
                   <span className="pillar-name">{pName(p)}</span>
                   <span className="pillar-arrow">▶</span>
@@ -237,8 +170,8 @@ export default function App() {
             ))}
 
             <button className="sidebar-quiz-btn"
-              onClick={()=>{setView('quiz');setQuizStep('intro');setSidebarOpen(false)}}>
-              <span>{tl('📝 Take the Quiz','📝 Fazer o Quiz','📝 Tomar el Quiz','📝 參加測驗')}</span>
+              onClick={()=>{setView('quiz');setQuizStep('intro');setSidebarOpen(false);}}>
+              {tl('📝 Take the Quiz','📝 Fazer o Quiz','📝 Tomar el Quiz','📝 參加測驗')}
             </button>
           </nav>
         </aside>
@@ -250,35 +183,29 @@ export default function App() {
           {view==='home' && (
             <>
               <div className="hero">
-                <div className="hero-grid" />
-                <div className="hero-eyebrow">
-                  RedotsClub — {tl('Global Community Playbook','Playbook Global da Comunidade','Guía Global de Comunidad','全球社群指南')}
-                </div>
+                <div className="hero-pattern" />
+                <div className="hero-eyebrow">RedotsClub — {tl('Global Community Playbook','Playbook Global da Comunidade','Guía Global de Comunidad','全球社群指南')}</div>
                 <h1>
-                  {tl(
-                    <><span>Great People.</span><br/>Exclusive Access.<br/>Unforgettable Moments.</>,
-                    <><span>Grandes Pessoas.</span><br/>Acesso Exclusivo.<br/>Momentos Inesquecíveis.</>,
-                    <><span>Grandes Personas.</span><br/>Acceso Exclusivo.<br/>Momentos Inolvidables.</>,
-                    <><span>優秀的人。</span><br/>獨家訪問。<br/>難忘的時刻。</>
-                  )}
+                  {tl(<>Great People.<br/>Exclusive Access.<br/><span>Unforgettable</span> Moments.</>,
+                      <>Grandes Pessoas.<br/>Acesso Exclusivo.<br/><span>Momentos</span> Inesquecíveis.</>,
+                      <>Grandes Personas.<br/>Acceso Exclusivo.<br/><span>Momentos</span> Inolvidables.</>,
+                      <>優秀的人。<br/>獨家訪問。<br/><span>難忘</span>的時刻。</>)}
                 </h1>
                 <p className="hero-sub">
-                  {tl(
-                    'The operational manual for RedotsClub country leads and regional leads — inspired by Superteam, built for a lifestyle-first audience.',
-                    'O manual operacional para líderes de país e regionais do RedotsClub.',
-                    'El manual operacional para líderes de país y regionales de RedotsClub.',
-                    'RedotsClub國家負責人及地區負責人的運營手冊。'
-                  )}
+                  {tl('A first-draft proposal for the RedotsClub Global Community Model — inspired by Superteam, built for a lifestyle-first audience.',
+                      'Uma proposta inicial para o Modelo Global de Comunidade do RedotsClub — inspirado no Superteam, construído para um público focado em estilo de vida.',
+                      'Una propuesta inicial para el Modelo Global de Comunidad de RedotsClub.',
+                      'RedotsClub全球社群模式初稿提案。')}
                 </p>
-                <div className="hero-stats">
+                <div className="hero-meta">
                   {[
-                    {num:'5',    label: tl('Pillars','Pilares','Pilares','支柱')},
-                    {num:'5',    label: tl('Regions','Regiões','Regiones','地區')},
-                    {num:'500',  label: tl('Members by Dec 2026','Membros até Dez 2026','Miembros Dic 2026','2026年12月前會員')},
-                    {num:'25',   label: tl('Chapters by Dec 2026','Capítulos até Dez 2026','Capítulos Dic 2026','2026年12月前分部')},
+                    {num:'5', label: tl('Pillars','Pilares','Pilares','支柱')},
+                    {num:'17', label: tl('Articles','Artigos','Artículos','文章')},
+                    {num:'20', label: tl('Quiz Questions','Perguntas do Quiz','Preguntas del Quiz','測驗題目')},
+                    {num:'1000', label: tl('Member Goal','Meta de Membros','Meta de Miembros','會員目標')},
                   ].map(s=>(
                     <div key={s.label} className="hero-stat">
-                      <span className="hero-stat-num"><Counter end={parseInt(s.num)} /></span>
+                      <span className="hero-stat-num">{s.num}</span>
                       <span className="hero-stat-label">{s.label}</span>
                     </div>
                   ))}
@@ -286,36 +213,28 @@ export default function App() {
               </div>
 
               <div className="content-area">
-                <p className="section-label reveal">{tl('Five Pillars of Excellence','Cinco Pilares de Excelência','Cinco Pilares de Excelencia','五大卓越支柱')}</p>
-                <h2 className="section-title reveal">{tl('The Framework','O Framework','El Marco','框架體系')}</h2>
-
-                <div className="pillar-grid">
-                  {PILLARS.map((p,i)=>(
-                    <div key={p.id}
-                      className={`pillar-card reveal reveal-delay-${Math.min(i%2+1,3)}`}
-                      onClick={()=>goToPillar(p)}>
-                      <div className="pillar-card-num">
-                        <span className="pillar-card-dot" />
-                        {pillarNum(p)} · {p.articles.length} {tl('articles','artigos','artículos','篇文章')}
-                      </div>
+                <h2 style={{fontWeight:900,fontSize:22,marginBottom:6,fontFamily:'Montserrat,sans-serif'}}>
+                  {tl('The Five Pillars','Os Cinco Pilares','Los Cinco Pilares','五大支柱')}
+                </h2>
+                <p style={{color:'#999',fontSize:14,fontWeight:500}}>
+                  {tl('Click any pillar to start reading.','Clique em qualquer pilar para começar a ler.','Haz clic en cualquier pilar para comenzar.','點擊任意支柱開始閱讀。')}
+                </p>
+                <div className="welcome-grid">
+                  {PILLARS.map(p=>(
+                    <div key={p.id} className="welcome-card" onClick={()=>goToPillar(p)}>
+                      <div className="welcome-card-num">{pillarNum(p)} · {p.articles.length} {tl('articles','artigos','artículos','篇文章')}</div>
                       <h3>{pName(p)}</h3>
                       <p>{pDesc(p)}</p>
-                      <span className="pillar-card-arrow">→</span>
                     </div>
                   ))}
-                  <div className="pillar-card reveal reveal-delay-2"
-                    onClick={()=>{setView('quiz');setQuizStep('intro')}}
-                    style={{borderTop:'1px solid var(--border)'}}>
-                    <div className="pillar-card-num">
-                      <span className="pillar-card-dot" />
-                      20 {tl('Questions','Perguntas','Preguntas','問題')}
-                    </div>
+                  <div className="welcome-card" onClick={()=>{setView('quiz');setQuizStep('intro');}}
+                    style={{borderLeft:'4px solid #000'}}>
+                    <div className="welcome-card-num">20 {tl('Questions','Perguntas','Preguntas','問題')}</div>
                     <h3>{tl('Country Lead Quiz','Quiz do Líder de País','Quiz del Líder de País','國家負責人測驗')}</h3>
                     <p>{tl('Test your understanding of the playbook. Results sent to the RedotsClub global team.',
                             'Teste seu entendimento do playbook. Resultados enviados à equipe global do RedotsClub.',
                             'Pon a prueba tu comprensión del playbook.',
                             '測試你對手冊的理解。結果將發送給RedotsClub全球團隊。')}</p>
-                    <span className="pillar-card-arrow">→</span>
                   </div>
                 </div>
               </div>
@@ -325,44 +244,39 @@ export default function App() {
           {/* PILLAR / ARTICLE */}
           {view==='pillar' && activePillar && activeArticle && (
             <>
-              <div className="article-hero">
-                <div className="article-eyebrow">{pillarNum(activePillar)} · {pName(activePillar)}</div>
-                <h1>{aTitle(activeArticle)}</h1>
+              <div className="hero" style={{padding:'48px 64px'}}>
+                <div className="hero-pattern" />
+                <div className="hero-eyebrow">{pillarNum(activePillar)} · {pName(activePillar)}</div>
+                <h1 style={{fontSize:36}}>{aTitle(activeArticle)}</h1>
               </div>
               <div className="content-area">
                 <div className="article-tabs">
                   {activePillar.articles.map(a=>(
-                    <button key={a.id}
-                      className={`article-tab${activeArticle.id===a.id?' active':''}`}
-                      onClick={()=>{setActiveArticle(a);if(mainRef.current)mainRef.current.scrollTop=0}}>
+                    <button key={a.id} className={`article-tab${activeArticle.id===a.id?' active':''}`}
+                      onClick={()=>{setActiveArticle(a);if(mainRef.current)mainRef.current.scrollTop=0;}}>
                       {aTitle(a)}
                     </button>
                   ))}
                 </div>
                 <div className="article-content">
                   <div className="article-meta">
-                    <span className="article-tag">{pName(activePillar)}</span>
+                    <span className="article-pillar-tag">{pName(activePillar)}</span>
                     <span className="article-author">{activeArticle.author}</span>
                   </div>
                   <div dangerouslySetInnerHTML={{__html: renderMd(aContent(activeArticle))}} />
                 </div>
-                <div className="article-nav">
+                <div style={{display:'flex',justifyContent:'space-between',marginTop:48,paddingTop:20,borderTop:'2px solid #eee'}}>
                   {(()=>{
-                    const idx = activePillar.articles.findIndex(a=>a.id===activeArticle.id);
-                    const prev = activePillar.articles[idx-1];
-                    const next = activePillar.articles[idx+1];
-                    return (
-                      <>
-                        {prev
-                          ? <button className="quiz-btn quiz-btn-secondary" onClick={()=>setActiveArticle(prev)}>← {aTitle(prev)}</button>
-                          : <span/>}
-                        {next
-                          ? <button className="quiz-btn quiz-btn-primary" onClick={()=>setActiveArticle(next)}>{aTitle(next)} →</button>
-                          : <button className="quiz-btn quiz-btn-primary" onClick={()=>{setView('quiz');setQuizStep('intro')}}>
+                    const idx=activePillar.articles.findIndex(a=>a.id===activeArticle.id);
+                    const prev=activePillar.articles[idx-1];
+                    const next=activePillar.articles[idx+1];
+                    return (<>
+                      {prev?<button className="quiz-btn quiz-btn-secondary" onClick={()=>setActiveArticle(prev)}>← {aTitle(prev)}</button>:<span/>}
+                      {next?<button className="quiz-btn quiz-btn-primary" onClick={()=>setActiveArticle(next)}>{aTitle(next)} →</button>
+                           :<button className="quiz-btn quiz-btn-primary" onClick={()=>{setView('quiz');setQuizStep('intro');}}>
                               {tl('Take the Quiz →','Fazer o Quiz →','Tomar el Quiz →','參加測驗 →')}
                             </button>}
-                      </>
-                    );
+                    </>);
                   })()}
                 </div>
               </div>
@@ -372,9 +286,10 @@ export default function App() {
           {/* QUIZ */}
           {view==='quiz' && (
             <>
-              <div className="article-hero">
-                <div className="article-eyebrow">{tl('Country Lead Assessment','Avaliação do Líder de País','Evaluación del Líder de País','國家負責人評估')}</div>
-                <h1>{tl('Playbook Quiz','Quiz do Playbook','Quiz del Playbook','手冊測驗')}</h1>
+              <div className="hero" style={{padding:'48px 64px'}}>
+                <div className="hero-pattern" />
+                <div className="hero-eyebrow">{tl('Country Lead Assessment','Avaliação do Líder de País','Evaluación del Líder de País','國家負責人評估')}</div>
+                <h1 style={{fontSize:36}}>{tl('Playbook Quiz','Quiz do Playbook','Quiz del Playbook','手冊測驗')}</h1>
               </div>
               <div className="content-area">
                 <div className="quiz-container">
@@ -383,20 +298,20 @@ export default function App() {
                     <>
                       <div className="quiz-hero">
                         <h2>{tl('Ready to be tested?','Pronto para ser testado?','¿Listo para ser evaluado?','準備好接受測試了嗎？')}</h2>
-                        <p>{tl('20 questions — 15 multiple choice + 5 scenario responses. Your answers will be sent to the RedotsClub global team.',
-                                '20 questões — 15 de múltipla escolha + 5 respostas de cenário. Suas respostas serão enviadas para a equipe global.',
+                        <p>{tl('20 questions — 15 multiple choice + 5 scenario responses. Your answers will be sent to lucas@redotpay.com.',
+                                '20 questões — 15 de múltipla escolha + 5 respostas de cenário. Suas respostas serão enviadas para lucas@redotpay.com.',
                                 '20 preguntas — 15 de opción múltiple + 5 respuestas de escenario.',
-                                '20道題目——15道選擇題 + 5道情境回答。')}</p>
+                                '20道題目——15道選擇題 + 5道情境回答。答案將發送至lucas@redotpay.com。')}</p>
                       </div>
                       <div className="question-card">
                         <div className="question-type">{tl('Before you begin','Antes de começar','Antes de comenzar','開始之前')}</div>
-                        <p style={{fontSize:14,color:'var(--gray-2)',lineHeight:1.7,marginBottom:16}}>
-                          {tl('This quiz tests your understanding of the RedotsClub Global Playbook. Scenario questions have no single correct answer — they are assessed on quality of reasoning.',
-                              'Este quiz testa seu entendimento do Playbook Global do RedotsClub. Questões de cenário são avaliadas pela qualidade do raciocínio.',
+                        <p style={{fontSize:14,color:'#555',lineHeight:1.65,fontWeight:500,marginBottom:16}}>
+                          {tl('This quiz tests your understanding of the RedotsClub Global Playbook. The answers are in the articles. Scenario questions have no single correct answer — they are assessed on quality of reasoning.',
+                              'Este quiz testa seu entendimento do Playbook Global do RedotsClub. As respostas estão nos artigos. As questões de cenário não têm uma única resposta correta.',
                               'Este quiz evalúa tu comprensión del Playbook Global de RedotsClub.',
-                              '此測驗測試您對RedotsClub全球手冊的理解。')}
+                              '此測驗測試您對RedotsClub全球手冊的理解。情境問題以推理質量評估。')}
                         </p>
-                        <ul style={{margin:'0 0 0 20px',fontSize:13,color:'var(--gray-3)',lineHeight:2,fontWeight:500}}>
+                        <ul style={{margin:'0 0 0 20px',fontSize:13,color:'#999',lineHeight:2,fontWeight:500}}>
                           <li>{tl('15 Multiple choice questions','15 Questões de múltipla escolha','15 Preguntas de opción múltiple','15道選擇題')}</li>
                           <li>{tl('5 Scenario responses (open-ended)','5 Respostas de cenário (abertas)','5 Respuestas de escenario','5道開放式情境回答')}</li>
                           <li>{tl('Results sent to lucas@redotpay.com','Resultados enviados para lucas@redotpay.com','Resultados enviados a lucas@redotpay.com','結果已發送至lucas@redotpay.com')}</li>
@@ -417,9 +332,9 @@ export default function App() {
                         <h3>{tl('Your Details','Seus Dados','Tus Datos','您的資料')}</h3>
                         <p>{tl('This information will be sent with your quiz results.','Esta informação será enviada com seus resultados.','Esta información se enviará con tus resultados.','此資訊將與您的測驗結果一併發送。')}</p>
                         {[
-                          {key:'name',    label:tl('Full Name','Nome Completo','Nombre Completo','全名'),          ph:tl('Your name','Seu nome','Tu nombre','您的姓名')},
+                          {key:'name', label:tl('Full Name','Nome Completo','Nombre Completo','全名'), ph:tl('Your name','Seu nome','Tu nombre','您的姓名')},
                           {key:'country', label:tl('Country / Region','País / Região','País / Región','國家／地區'), ph:tl('e.g. Brazil','ex. Brasil','ej. Brasil','例如：巴西')},
-                          {key:'email',   label:tl('Email Address','Endereço de Email','Dirección de Email','電郵地址'), ph:'your@email.com'},
+                          {key:'email', label:tl('Email Address','Endereço de Email','Dirección de Email','電郵地址'), ph:'your@email.com'},
                         ].map(f=>(
                           <div key={f.key} className="form-group">
                             <label className="form-label">{f.label}</label>
@@ -434,7 +349,7 @@ export default function App() {
                         </button>
                         <button className="quiz-btn quiz-btn-primary"
                           disabled={!submitterInfo.name||!submitterInfo.country||!submitterInfo.email}
-                          onClick={()=>{setCurrentQ(0);setQuizStep('questions')}}>
+                          onClick={()=>{setCurrentQ(0);setQuizStep('questions');}}>
                           {tl('Begin Questions →','Iniciar Questões →','Comenzar Preguntas →','開始答題 →')}
                         </button>
                       </div>
@@ -442,8 +357,8 @@ export default function App() {
                   )}
 
                   {quizStep==='questions' && (()=>{
-                    const q = QUIZ_QUESTIONS[currentQ];
-                    const answered = quizAnswers[q.id]!==undefined && quizAnswers[q.id]!=='';
+                    const q=QUIZ_QUESTIONS[currentQ];
+                    const answered=quizAnswers[q.id]!==undefined&&quizAnswers[q.id]!=='';
                     return (
                       <>
                         <div className="quiz-progress">
@@ -457,7 +372,7 @@ export default function App() {
                           <div className="question-text">{qText(q)}</div>
                           {q.type==='multiple-choice' && (
                             <div className="options-grid">
-                              {q.options.map((_,i)=>(
+                              {q.options.map((opt,i)=>(
                                 <button key={i} className={`option-btn${quizAnswers[q.id]===i?' selected':''}`}
                                   onClick={()=>setQuizAnswers(a=>({...a,[q.id]:i}))}>
                                   <span className="option-letter">{['A','B','C','D'][i]}</span>
@@ -468,20 +383,23 @@ export default function App() {
                           )}
                           {q.type==='open-ended' && (
                             <textarea className="textarea-answer"
-                              placeholder={tl('Write your response here…','Escreva sua resposta aqui…','Escribe tu respuesta aquí…','在此填寫您的回答……')}
+                              placeholder={tl('Write your response here... Focus on quality of reasoning and practical thinking.',
+                                              'Escreva sua resposta aqui... Foque na qualidade do raciocínio e no pensamento prático.',
+                                              'Escribe tu respuesta aquí...',
+                                              '在此填寫您的回答……')}
                               value={quizAnswers[q.id]||''}
                               onChange={e=>setQuizAnswers(a=>({...a,[q.id]:e.target.value}))}/>
                           )}
                         </div>
                         <div className="quiz-nav">
-                          {currentQ > 0
-                            ? <button className="quiz-btn quiz-btn-secondary" onClick={()=>setCurrentQ(q=>q-1)}>{tl('← Previous','← Anterior','← Anterior','← 上一題')}</button>
-                            : <span/>}
-                          {currentQ < QUIZ_QUESTIONS.length-1
-                            ? <button className="quiz-btn quiz-btn-primary" disabled={!answered} onClick={()=>setCurrentQ(q=>q+1)}>{tl('Next →','Próximo →','Siguiente →','下一題 →')}</button>
-                            : <button className="quiz-btn quiz-btn-primary" disabled={!answered||sending} onClick={submitQuiz}>
-                                {sending ? tl('Sending…','Enviando…','Enviando…','發送中…') : tl('Submit Quiz →','Enviar Quiz →','Enviar Quiz →','提交測驗 →')}
-                              </button>}
+                          {currentQ>0
+                            ?<button className="quiz-btn quiz-btn-secondary" onClick={()=>setCurrentQ(q=>q-1)}>{tl('← Previous','← Anterior','← Anterior','← 上一題')}</button>
+                            :<span/>}
+                          {currentQ<QUIZ_QUESTIONS.length-1
+                            ?<button className="quiz-btn quiz-btn-primary" disabled={!answered} onClick={()=>setCurrentQ(q=>q+1)}>{tl('Next →','Próximo →','Siguiente →','下一題 →')}</button>
+                            :<button className="quiz-btn quiz-btn-primary" disabled={!answered||sending} onClick={submitQuiz}>
+                               {sending?tl('Sending...','Enviando...','Enviando...','發送中...'):tl('Submit Quiz →','Enviar Quiz →','Enviar Quiz →','提交測驗 →')}
+                             </button>}
                         </div>
                       </>
                     );
@@ -489,30 +407,29 @@ export default function App() {
 
                   {quizStep==='done' && (
                     <div className="score-screen">
-                      <div className="score-ring">
+                      <div className="score-circle">
                         <span className="score-num">{mcScore}/15</span>
                         <span className="score-label">{tl('Score','Pontuação','Puntuación','得分')}</span>
                       </div>
                       <h2>
-                        {mcScore>=12 ? tl('Outstanding! 🏆','Excelente! 🏆','¡Sobresaliente! 🏆','出色！🏆')
-                         : mcScore>=9 ? tl('Well done! 🎯','Muito bem! 🎯','¡Bien hecho! 🎯','做得好！🎯')
-                         : mcScore>=6 ? tl('Good effort. 📚','Bom esforço. 📚','Buen esfuerzo. 📚','繼續努力。📚')
-                         :              tl('Keep studying. 💪','Continue estudando. 💪','Sigue estudiando. 💪','繼續學習。💪')}
+                        {mcScore>=12?tl('Outstanding! 🏆','Excelente! 🏆','¡Sobresaliente! 🏆','出色！🏆'):
+                         mcScore>=9 ?tl('Well done! 🎯','Muito bem! 🎯','¡Bien hecho! 🎯','做得好！🎯'):
+                         mcScore>=6 ?tl('Good effort. 📚','Bom esforço. 📚','Buen esfuerzo. 📚','繼續努力。📚'):
+                                     tl('Keep studying. 💪','Continue estudando. 💪','Sigue estudiando. 💪','繼續學習。💪')}
                       </h2>
                       <p>{tl(
-                        `You answered ${mcScore} out of 15 multiple choice questions correctly. Your full results have been sent to the RedotsClub global team.`,
-                        `Você acertou ${mcScore} das 15 questões. Seus resultados completos foram enviados para a equipe global.`,
+                        `You answered ${mcScore} out of 15 multiple choice questions correctly. Your full results have been sent to lucas@redotpay.com.`,
+                        `Você acertou ${mcScore} das 15 questões de múltipla escolha. Seus resultados completos foram enviados para lucas@redotpay.com.`,
                         `Respondiste correctamente ${mcScore} de 15 preguntas.`,
-                        `您在15道選擇題中答對了${mcScore}道。`
+                        `您在15道選擇題中答對了${mcScore}道。完整結果已發送至lucas@redotpay.com。`
                       )}</p>
-                      <div className="score-badge">✓ {tl('Results sent to lucas@redotpay.com','Resultados enviados para lucas@redotpay.com','Resultados enviados a lucas@redotpay.com','結果已發送至lucas@redotpay.com')}</div>
-                      <div style={{marginTop:32,display:'flex',gap:12,justifyContent:'center',flexWrap:'wrap'}}>
+                      <div className="score-sent-badge">✓ {tl('Results sent to lucas@redotpay.com','Resultados enviados para lucas@redotpay.com','Resultados enviados a lucas@redotpay.com','結果已發送至lucas@redotpay.com')}</div>
+                      <div style={{marginTop:28,display:'flex',gap:12,justifyContent:'center',flexWrap:'wrap'}}>
                         <button className="quiz-btn quiz-btn-secondary" onClick={()=>setView('home')}>{tl('← Back to Playbook','← Voltar ao Playbook','← Volver al Playbook','← 返回手冊')}</button>
-                        <button className="quiz-btn quiz-btn-primary" onClick={()=>{setQuizStep('intro');setQuizAnswers({});setCurrentQ(0)}}>{tl('Retake Quiz','Refazer Quiz','Repetir Quiz','重新測驗')}</button>
+                        <button className="quiz-btn quiz-btn-primary" onClick={()=>{setQuizStep('intro');setQuizAnswers({});setCurrentQ(0);}}>{tl('Retake Quiz','Refazer Quiz','Repetir Quiz','重新測驗')}</button>
                       </div>
                     </div>
                   )}
-
                 </div>
               </div>
             </>
